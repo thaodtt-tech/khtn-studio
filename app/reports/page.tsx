@@ -161,9 +161,9 @@ export default function ReportsPage() {
                     </button>
                     <button
                       className="flex items-center gap-1 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs transition-colors"
-                      onClick={() => alert('Tính năng Export PDF sẽ có trong phiên bản tiếp theo!')}
+                      onClick={() => window.print()}
                     >
-                      <Download size={12} /> Export PDF
+                      <Download size={12} /> In / PDF
                     </button>
                   </div>
                 </div>

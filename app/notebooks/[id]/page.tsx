@@ -320,9 +320,20 @@ export default function NotebookDetailPage() {
                 />
               )}
               {newSource.type === 'file' && (
-                <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center text-sm text-slate-400">
-                  📎 Kéo thả file hoặc click để chọn (demo)
-                </div>
+                <label className="border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-lg p-6 text-center text-sm text-slate-400 cursor-pointer block transition-colors hover:bg-blue-50">
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg"
+                    onChange={e => {
+                      const file = e.target.files?.[0]
+                      if (file) setNewSource(p => ({ ...p, title: p.title || file.name, content: file.name }))
+                    }}
+                  />
+                  📎 {newSource.content
+                    ? <span className="text-blue-600 font-medium">{newSource.content}</span>
+                    : 'Kéo thả hoặc click để chọn file (.pdf, .doc, .png...)'}
+                </label>
               )}
             </div>
             <div className="flex gap-3 mt-5">

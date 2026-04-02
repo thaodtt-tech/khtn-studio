@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Eye, Pencil, Trash2, Users, Star, Clock, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Plus, Eye, Pencil, Trash2, Users, Clock, Globe, Lock } from 'lucide-react'
 import { cn, BRANCH_META, GRADE_LABELS } from '@/lib/utils'
 import { GAMES } from '@/data/games'
 import { TEACHER_PROFILE } from '@/data/progress'
@@ -21,8 +21,9 @@ const GRADES: Grade[] = [6, 7, 8, 9]
 const BRANCHES: SubjectBranch[] = ['physics', 'chemistry', 'biology', 'environment']
 
 export default function TeacherGameStudioPage() {
-  const [view, setView] = useState<'list' | 'create'>('list')
+  const [view, setView] = useState<'list' | 'create' | 'edit'>('list')
   const [myGames, setMyGames] = useState<Game[]>(GAMES.slice(0, 3))
+  const [editingGame, setEditingGame] = useState<Game | null>(null)
   const [previewGame, setPreviewGame] = useState<Game | null>(null)
 
   // Create form state
@@ -56,33 +57,62 @@ export default function TeacherGameStudioPage() {
     if (!form.title.trim()) return
     setCreating(true)
     setTimeout(() => {
-      const game: Game = {
-        id: `g-${Date.now()}`,
-        ...form,
-        emoji: '🎮', color: 'text-blue-600', bgColor: 'bg-blue-50',
-        questions: questions.map((q, i) => ({
-          id: `q${i}`, type: 'quiz', question: q.question,
-          answer: q.options[q.correctIndex], options: q.options,
-          correctIndex: q.correctIndex, explanation: q.explanation,
-        })),
-        createdBy: 'teacher', teacherName: TEACHER_PROFILE.name,
-        playCount: 0, rating: 0, isPublished: false,
-        createdAt: new Date().toISOString(),
+      const builtQuestions = questions.map((q, i) => ({
+        id: `q${i}`, type: 'quiz' as const, question: q.question,
+        answer: q.options[q.correctIndex] || '', options: q.options,
+        correctIndex: q.correctIndex, explanation: q.explanation,
+      }))
+      if (editingGame) {
+        // update existing
+        setMyGames(prev => prev.map(g => g.id === editingGame.id
+          ? { ...g, ...form, questions: builtQuestions }
+          : g
+        ))
+        setEditingGame(null)
+      } else {
+        const game: Game = {
+          id: `g-${Date.now()}`, ...form,
+          emoji: '🎮', color: 'text-blue-600', bgColor: 'bg-blue-50',
+          questions: builtQuestions,
+          createdBy: 'teacher', teacherName: TEACHER_PROFILE.name,
+          playCount: 0, rating: 0, isPublished: false,
+          createdAt: new Date().toISOString(),
+        }
+        setMyGames(prev => [game, ...prev])
       }
-      setMyGames(prev => [game, ...prev])
       setView('list')
       setCreating(false)
-    }, 1200)
+    }, 800)
+  }
+
+  function startEdit(game: Game) {
+    setEditingGame(game)
+    setForm({
+      title: game.title, description: game.description, type: game.type,
+      grade: game.grade, branch: game.branch, topic: game.topic,
+      estimatedMinutes: game.estimatedMinutes,
+    })
+    setQuestions(game.questions.map(q => ({
+      question: q.question,
+      options: (q as any).options || [q.answer, '', '', ''],
+      correctIndex: (q as any).correctIndex ?? 0,
+      explanation: q.explanation,
+    })))
+    setView('create')
+  }
+
+  function togglePublish(gameId: string) {
+    setMyGames(prev => prev.map(g => g.id === gameId ? { ...g, isPublished: !g.isPublished } : g))
   }
 
   if (view === 'create') return (
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="page-title">Tạo Game mới</h1>
+          <h1 className="page-title">{editingGame ? 'Chỉnh sửa Game' : 'Tạo Game mới'}</h1>
           <p className="page-subtitle">Thiết kế trò chơi học tập cho học sinh của bạn</p>
         </div>
-        <button onClick={() => setView('list')} className="btn-secondary">← Quay lại</button>
+        <button onClick={() => { setView('list'); setEditingGame(null) }} className="btn-secondary">← Quay lại</button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -197,7 +227,7 @@ export default function TeacherGameStudioPage() {
               (!form.title.trim() || creating) && 'opacity-50 cursor-not-allowed'
             )}
           >
-            {creating ? '⏳ Đang tạo...' : '🚀 Tạo và lưu game'}
+            {creating ? '⏳ Đang lưu...' : editingGame ? '💾 Lưu thay đổi' : '🚀 Tạo và lưu game'}
           </button>
         </div>
       </div>
@@ -227,11 +257,17 @@ export default function TeacherGameStudioPage() {
                 <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center text-xl', game.bgColor)}>
                   {game.emoji}
                 </div>
-                <div className={cn('badge text-[10px]',
-                  game.isPublished ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'
-                )}>
-                  {game.isPublished ? '✅ Published' : '⏳ Draft'}
-                </div>
+                <button
+                  onClick={() => togglePublish(game.id)}
+                  className={cn('badge text-[10px] cursor-pointer transition-colors',
+                    game.isPublished ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                  )}
+                  title={game.isPublished ? 'Click để ẩn khỏi thư viện' : 'Click để publish'}
+                >
+                  {game.isPublished
+                    ? <><Globe size={9} className="inline mr-1" />Published</>
+                    : <><Lock size={9} className="inline mr-1" />Draft</>}
+                </button>
               </div>
               <h3 className="text-sm font-semibold text-slate-800 mb-1 line-clamp-2">{game.title}</h3>
               <div className="flex flex-wrap gap-1.5 mb-3">
@@ -247,11 +283,15 @@ export default function TeacherGameStudioPage() {
                 <Link href={`/games/${game.id}`} className="btn-secondary flex-1 text-center text-xs py-1.5">
                   <Eye size={12} className="inline mr-1" />Preview
                 </Link>
-                <button className="btn-ghost text-xs py-1.5 px-2">
+                <button onClick={() => startEdit(game)}
+                  className="btn-ghost text-xs py-1.5 px-2 hover:bg-blue-50 hover:text-blue-600"
+                  title="Chỉnh sửa game"
+                >
                   <Pencil size={12} />
                 </button>
                 <button onClick={() => setMyGames(prev => prev.filter(g => g.id !== game.id))}
                   className="w-7 h-7 rounded-lg hover:bg-red-50 flex items-center justify-center text-slate-300 hover:text-red-400 transition-colors"
+                  title="Xóa game"
                 >
                   <Trash2 size={13} />
                 </button>
