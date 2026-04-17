@@ -1,6 +1,6 @@
 // ─── Subject & Lesson ─────────────────────────────────────────────────────────
 
-export type SubjectBranch = 'physics' | 'chemistry' | 'biology' | 'environment'
+export type SubjectBranch = 'physics' | 'chemistry' | 'biology' | 'environment' | 'khtn'
 export type Grade = 6 | 7 | 8 | 9
 export type Difficulty = 'basic' | 'advanced' | 'gifted'
 

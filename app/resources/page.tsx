@@ -1,13 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Star, Eye, Bookmark, BookmarkCheck, X } from 'lucide-react'
+import { Search, Star, Eye, Bookmark, BookmarkCheck, X, Download } from 'lucide-react'
 import { cn, BRANCH_META, GRADE_LABELS, RESOURCE_TYPE_META } from '@/lib/utils'
 import { RESOURCES } from '@/data/resources'
 import type { Resource, Grade, SubjectBranch, ResourceType } from '@/types'
 
 const GRADES: (Grade | 'all')[] = ['all', 6, 7, 8, 9]
-const BRANCHES: (SubjectBranch | 'all')[] = ['all', 'physics', 'chemistry', 'biology', 'environment']
+const BRANCHES: (SubjectBranch | 'all')[] = ['all', 'khtn', 'physics', 'chemistry', 'biology', 'environment']
 const TYPES: (ResourceType | 'all')[] = ['all', 'article', 'pdf', 'video', 'mindmap', 'exercise', 'simulation', 'experiment', 'image']
 
 function ResourceCard({ resource, saved, onSave }: {
@@ -65,6 +65,14 @@ function ResourceCard({ resource, saved, onSave }: {
           <span className="flex items-center gap-0.5"><Star size={10} /> {resource.savedCount}</span>
         </div>
       </div>
+
+      {resource.url && (
+        <a href={resource.url} target="_blank" rel="noopener noreferrer" download
+          className="mt-3 flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg text-xs font-medium bg-teal-50 text-teal-700 hover:bg-teal-100 transition-colors"
+        >
+          <Download size={12} /> Tải xuống
+        </a>
+      )}
     </div>
   )
 }
