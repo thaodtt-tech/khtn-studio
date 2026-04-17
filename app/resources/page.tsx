@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Star, Eye, Bookmark, BookmarkCheck, X, Download } from 'lucide-react'
+import { Search, Star, Eye, Bookmark, BookmarkCheck, X, BookOpen, Download } from 'lucide-react'
 import { cn, BRANCH_META, GRADE_LABELS, RESOURCE_TYPE_META } from '@/lib/utils'
 import { RESOURCES } from '@/data/resources'
 import type { Resource, Grade, SubjectBranch, ResourceType } from '@/types'
@@ -10,10 +10,46 @@ const GRADES: (Grade | 'all')[] = ['all', 6, 7, 8, 9]
 const BRANCHES: (SubjectBranch | 'all')[] = ['all', 'khtn', 'physics', 'chemistry', 'biology', 'environment']
 const TYPES: (ResourceType | 'all')[] = ['all', 'article', 'pdf', 'video', 'mindmap', 'exercise', 'simulation', 'experiment', 'image']
 
-function ResourceCard({ resource, saved, onSave }: {
+function previewUrl(url: string) {
+  // Convert Google Drive view URL to embeddable preview URL
+  return url.replace(/\/view.*$/, '/preview')
+}
+
+function PdfModal({ resource, onClose }: { resource: Resource; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-black/70" onClick={onClose}>
+      <div className="flex items-center justify-between px-4 py-2 bg-slate-900 text-white shrink-0" onClick={e => e.stopPropagation()}>
+        <span className="text-sm font-medium truncate">{resource.thumbnailEmoji} {resource.title}</span>
+        <div className="flex items-center gap-2 ml-4 shrink-0">
+          <a
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 px-2.5 py-1 rounded text-xs bg-slate-700 hover:bg-slate-600 transition-colors"
+          >
+            <Download size={12} /> Tải xuống
+          </a>
+          <button onClick={onClose} className="p-1.5 rounded hover:bg-slate-700 transition-colors">
+            <X size={16} />
+          </button>
+        </div>
+      </div>
+      <div className="flex-1 min-h-0" onClick={e => e.stopPropagation()}>
+        <iframe
+          src={previewUrl(resource.url!)}
+          className="w-full h-full border-0"
+          allow="autoplay"
+        />
+      </div>
+    </div>
+  )
+}
+
+function ResourceCard({ resource, saved, onSave, onRead }: {
   resource: Resource
   saved: boolean
   onSave: () => void
+  onRead: () => void
 }) {
   const [expanded, setExpanded] = useState(false)
   const typeM = RESOURCE_TYPE_META[resource.type]
@@ -21,7 +57,6 @@ function ResourceCard({ resource, saved, onSave }: {
 
   return (
     <div className="card p-4 flex flex-col hover:shadow-card-hover transition-all">
-      {/* Top row */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
           <span className={cn('badge text-[10px]', typeM.color)}>{typeM.emoji} {typeM.label}</span>
@@ -32,15 +67,12 @@ function ResourceCard({ resource, saved, onSave }: {
         </button>
       </div>
 
-      {/* Thumbnail */}
       <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-2xl mb-3">
         {resource.thumbnailEmoji}
       </div>
 
-      {/* Title */}
       <h3 className="text-sm font-semibold text-slate-800 mb-1 line-clamp-2 leading-snug">{resource.title}</h3>
 
-      {/* Description */}
       <p className={cn('text-xs text-slate-500 leading-relaxed mb-3 flex-1', expanded ? '' : 'line-clamp-2')}>
         {resource.description}
       </p>
@@ -50,14 +82,12 @@ function ResourceCard({ resource, saved, onSave }: {
         </button>
       )}
 
-      {/* Tags */}
       <div className="flex flex-wrap gap-1 mb-3">
         {resource.tags.slice(0, 3).map(t => (
           <span key={t} className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded-full">{t}</span>
         ))}
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-50 pt-2.5">
         <span>🎓 {resource.author}</span>
         <div className="flex items-center gap-2">
@@ -67,11 +97,12 @@ function ResourceCard({ resource, saved, onSave }: {
       </div>
 
       {resource.url && (
-        <a href={resource.url} target="_blank" rel="noopener noreferrer" download
+        <button
+          onClick={onRead}
           className="mt-3 flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg text-xs font-medium bg-teal-50 text-teal-700 hover:bg-teal-100 transition-colors"
         >
-          <Download size={12} /> Tải xuống
-        </a>
+          <BookOpen size={12} /> Đọc online
+        </button>
       )}
     </div>
   )
@@ -84,6 +115,7 @@ export default function ResourcesPage() {
   const [type, setType] = useState<ResourceType | 'all'>('all')
   const [saved, setSaved] = useState<Set<string>>(new Set(['r1', 'r7', 'r9', 'r10']))
   const [showSavedOnly, setShowSavedOnly] = useState(false)
+  const [viewing, setViewing] = useState<Resource | null>(null)
 
   const filtered = RESOURCES.filter(r =>
     (!search || r.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -105,12 +137,13 @@ export default function ResourcesPage() {
 
   return (
     <div>
+      {viewing && <PdfModal resource={viewing} onClose={() => setViewing(null)} />}
+
       <div className="mb-6">
         <h1 className="page-title">Thư viện số KHTN</h1>
         <p className="page-subtitle">Bài viết, PDF, video, sơ đồ, bài tập và mô phỏng cho học sinh THCS</p>
       </div>
 
-      {/* Search & Filters */}
       <div className="card p-4 mb-6 space-y-3">
         <div className="flex gap-3 items-center">
           <div className="relative flex-1">
@@ -186,7 +219,7 @@ export default function ResourcesPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filtered.map(r => (
-          <ResourceCard key={r.id} resource={r} saved={saved.has(r.id)} onSave={() => toggleSave(r.id)} />
+          <ResourceCard key={r.id} resource={r} saved={saved.has(r.id)} onSave={() => toggleSave(r.id)} onRead={() => setViewing(r)} />
         ))}
       </div>
 
