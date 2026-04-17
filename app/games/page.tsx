@@ -17,7 +17,7 @@ const GAME_TYPE_LABELS: Record<GameType, string> = {
 }
 
 const GRADES: (Grade | 'all')[] = ['all', 6, 7, 8, 9]
-const BRANCHES: (SubjectBranch | 'all')[] = ['all', 'physics', 'chemistry', 'biology', 'environment']
+const BRANCHES: (SubjectBranch | 'all')[] = ['all', 'khtn', 'physics', 'chemistry', 'biology', 'environment']
 
 export default function GamesPage() {
   const [search, setSearch] = useState('')
