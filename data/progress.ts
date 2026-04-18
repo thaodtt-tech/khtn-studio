@@ -2,12 +2,12 @@ import type { UserProgress, UserProfile } from '@/types'
 
 export const CURRENT_USER: UserProfile = {
   id: 'u1',
-  name: 'Nguyễn Minh Khoa',
-  email: 'khoa.nguyen@thcs-demo.edu.vn',
+  name: 'Nguyễn Nguyên Bảo',
+  email: 'bao.nguyen@thcs-demo.edu.vn',
   role: 'student',
-  grade: 8,
-  class: '8A2',
-  school: 'THCS Nguyễn Du',
+  grade: 6,
+  class: '6A7',
+  school: 'THCS Dịch Vọng Hậu',
   avatar: '🎓',
   createdAt: '2024-09-01',
 }
@@ -56,7 +56,7 @@ export const TEACHER_PROFILE: UserProfile = {
   name: 'Nguyễn Thị Thanh Hà',
   email: 'ha.nguyen@thcs-demo.edu.vn',
   role: 'teacher',
-  school: 'THCS Nguyễn Du',
+  school: 'THCS Dịch Vọng Hậu',
   avatar: '👩‍🏫',
   createdAt: '2023-09-01',
 }

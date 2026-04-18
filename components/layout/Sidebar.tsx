@@ -118,8 +118,8 @@ export function Sidebar() {
             🎓
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-slate-700 truncate">Nguyễn Minh Khoa</p>
-            <p className="text-[10px] text-slate-400">Lớp 8A2 · THCS Nguyễn Du</p>
+            <p className="text-xs font-semibold text-slate-700 truncate">Nguyễn Nguyên Bảo</p>
+            <p className="text-[10px] text-slate-400">Lớp 6A7 · THCS Dịch Vọng Hậu</p>
           </div>
         </div>
       </div>
