@@ -5,8 +5,9 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   Home, BookOpen, Library, FolderOpen, NotebookPen,
   Sparkles, FileText, Network, Gamepad2, PenTool, User,
-  FlaskConical, ChevronRight, LogOut,
+  ChevronRight, LogOut,
 } from 'lucide-react'
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { APP_NAME } from '@/lib/constants'
 import { getUser, logout } from '@/lib/auth'
@@ -70,9 +71,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="px-5 py-5 border-b border-slate-100">
         <Link href="/dashboard" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-            <FlaskConical size={16} className="text-white" />
-          </div>
+          <Image src="/logo.png" alt={APP_NAME} width={32} height={32} className="rounded-lg" />
           <div>
             <div className="font-bold text-slate-900 text-sm leading-tight">{APP_NAME}</div>
             <div className="text-[10px] text-slate-400 leading-tight">KHTN THCS</div>

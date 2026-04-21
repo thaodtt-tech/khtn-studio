@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { FlaskConical, Eye, EyeOff, AlertCircle, Loader2, ChevronRight } from 'lucide-react'
+import Image from 'next/image'
+import { Eye, EyeOff, AlertCircle, Loader2, ChevronRight } from 'lucide-react'
 import { login, isAuthenticated } from '@/lib/auth'
 import { APP_NAME } from '@/lib/constants'
 
@@ -56,9 +57,7 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="relative flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center backdrop-blur">
-            <FlaskConical size={20} className="text-white" />
-          </div>
+          <Image src="/logo.png" alt={APP_NAME} width={44} height={44} className="rounded-xl shadow-lg" />
           <div>
             <div className="text-white font-bold text-lg leading-tight">{APP_NAME}</div>
             <div className="text-blue-200 text-xs">KHTN THCS</div>
@@ -115,9 +114,7 @@ export default function LoginPage() {
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-              <FlaskConical size={18} className="text-white" />
-            </div>
+            <Image src="/logo.png" alt={APP_NAME} width={36} height={36} className="rounded-xl" />
             <span className="font-bold text-slate-900">{APP_NAME}</span>
           </div>
 
