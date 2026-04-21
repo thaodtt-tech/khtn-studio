@@ -49,52 +49,54 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel – branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-indigo-700 to-violet-800 flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-indigo-700 to-violet-800 flex-col items-center justify-center p-12 relative overflow-hidden">
         {/* Decorative circles */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full" />
         <div className="absolute -bottom-32 -left-16 w-80 h-80 bg-white/5 rounded-full" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/[0.02] rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/[0.03] rounded-full" />
 
-        {/* Logo */}
-        <div className="relative flex items-center gap-4">
-          <Image src="/logo.png" alt={APP_NAME} width={64} height={64} className="rounded-2xl shadow-xl" />
+        {/* Centered logo + name */}
+        <div className="relative flex flex-col items-center text-center space-y-5 mb-12">
+          <Image
+            src="/logo.png"
+            alt={APP_NAME}
+            width={140}
+            height={140}
+            className="rounded-3xl shadow-2xl ring-4 ring-white/20"
+          />
           <div>
-            <div className="text-white font-bold text-xl leading-tight">{APP_NAME}</div>
-            <div className="text-blue-200 text-sm">KHTN THCS · Lớp 6–9</div>
+            <div className="text-white font-extrabold text-4xl tracking-tight leading-tight">{APP_NAME}</div>
+            <div className="text-blue-200 text-base mt-1">Khoa học Tự nhiên THCS · Lớp 6–9</div>
           </div>
         </div>
 
         {/* Main message */}
-        <div className="relative space-y-6">
-          <h1 className="text-4xl font-bold text-white leading-tight">
-            Khám phá thế giới<br />
-            <span className="text-blue-200">Khoa học Tự nhiên</span>
-          </h1>
-          <p className="text-blue-100 text-lg leading-relaxed max-w-sm">
-            Học theo chương trình THCS với game tương tác, notebook AI và hơn 36 bài ôn tập được thiết kế theo 3 mạch KHTN.
+        <div className="relative space-y-5 text-center max-w-sm">
+          <p className="text-blue-100 text-lg leading-relaxed">
+            Game tương tác, notebook AI và hơn <strong className="text-white">36 bài ôn tập</strong> theo 3 mạch KHTN.
           </p>
 
           {/* Subject badges */}
-          <div className="flex flex-wrap gap-2 pt-2">
+          <div className="flex justify-center flex-wrap gap-2">
             {[
               { label: '⚡ Vật lí', bg: 'bg-indigo-500/30' },
               { label: '🧪 Hoá học', bg: 'bg-amber-500/30' },
               { label: '🌱 Sinh học', bg: 'bg-emerald-500/30' },
             ].map(s => (
-              <span key={s.label} className={`${s.bg} text-white text-sm px-3 py-1.5 rounded-full backdrop-blur`}>
+              <span key={s.label} className={`${s.bg} text-white text-sm px-4 py-1.5 rounded-full backdrop-blur border border-white/10`}>
                 {s.label}
               </span>
             ))}
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 pt-4">
+          <div className="grid grid-cols-3 gap-4 pt-2">
             {[
               { value: '36+', label: 'Game học tập' },
               { value: '6–9', label: 'Lớp THCS' },
               { value: '3', label: 'Mạch KHTN' },
             ].map(s => (
-              <div key={s.label} className="text-center">
+              <div key={s.label} className="text-center p-3 bg-white/10 rounded-xl backdrop-blur">
                 <div className="text-2xl font-bold text-white">{s.value}</div>
                 <div className="text-blue-200 text-xs mt-0.5">{s.label}</div>
               </div>
@@ -103,8 +105,8 @@ export default function LoginPage() {
         </div>
 
         {/* Footer note */}
-        <div className="relative text-blue-300 text-xs">
-          Theo chương trình GDPT 2018 · 3 bộ sách: Cánh Diều, KNTT, CTST
+        <div className="absolute bottom-6 text-blue-300 text-xs">
+          Theo chương trình GDPT 2018 · Cánh Diều · KNTT · CTST
         </div>
       </div>
 
