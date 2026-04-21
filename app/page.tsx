@@ -110,8 +110,8 @@ export default function LandingPage() {
       <nav className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Image src="/logo.png" alt={APP_NAME} width={32} height={32} className="rounded-xl" />
-            <span className="font-bold text-slate-900">{APP_NAME}</span>
+            <Image src="/logo.png" alt={APP_NAME} width={36} height={36} className="rounded-xl" />
+            <span className="font-bold text-slate-900 text-base">{APP_NAME}</span>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/games" className="hidden sm:flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900 transition-colors">

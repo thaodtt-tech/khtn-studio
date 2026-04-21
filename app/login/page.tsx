@@ -56,11 +56,11 @@ export default function LoginPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/[0.02] rounded-full" />
 
         {/* Logo */}
-        <div className="relative flex items-center gap-3">
-          <Image src="/logo.png" alt={APP_NAME} width={44} height={44} className="rounded-xl shadow-lg" />
+        <div className="relative flex items-center gap-4">
+          <Image src="/logo.png" alt={APP_NAME} width={64} height={64} className="rounded-2xl shadow-xl" />
           <div>
-            <div className="text-white font-bold text-lg leading-tight">{APP_NAME}</div>
-            <div className="text-blue-200 text-xs">KHTN THCS</div>
+            <div className="text-white font-bold text-xl leading-tight">{APP_NAME}</div>
+            <div className="text-blue-200 text-sm">KHTN THCS · Lớp 6–9</div>
           </div>
         </div>
 
