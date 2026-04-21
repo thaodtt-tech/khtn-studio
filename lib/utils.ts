@@ -24,9 +24,9 @@ export function timeAgo(dateStr: string): string {
 }
 
 export const BRANCH_META: Record<SubjectBranch, { label: string; color: string; bg: string; emoji: string }> = {
-  physics:     { label: 'Vật lí',                color: 'text-indigo-700',  bg: 'bg-indigo-50',  emoji: '⚡' },
-  chemistry:   { label: 'Hóa học',               color: 'text-amber-700',   bg: 'bg-amber-50',   emoji: '🧪' },
-  biology:     { label: 'Sinh học',              color: 'text-emerald-700', bg: 'bg-emerald-50', emoji: '🌱' },
+  physics:     { label: 'Vật lí (mạch Năng lượng và sự biến đổi)',        color: 'text-indigo-700',  bg: 'bg-indigo-50',  emoji: '⚡' },
+  chemistry:   { label: 'Hoá học (mạch Chất và sự biến đổi của chất)',   color: 'text-amber-700',   bg: 'bg-amber-50',   emoji: '🧪' },
+  biology:     { label: 'Sinh học (mạch Vật sống)',                       color: 'text-emerald-700', bg: 'bg-emerald-50', emoji: '🌱' },
   environment: { label: 'Môi trường',            color: 'text-sky-700',     bg: 'bg-sky-50',     emoji: '🌍' },
   khtn:        { label: 'Khoa học Tự nhiên',     color: 'text-teal-700',    bg: 'bg-teal-50',    emoji: '🔭' },
 }

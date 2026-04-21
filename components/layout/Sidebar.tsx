@@ -1,14 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   Home, BookOpen, Library, FolderOpen, NotebookPen,
   Sparkles, FileText, Network, Gamepad2, PenTool, User,
-  FlaskConical, ChevronRight,
+  FlaskConical, ChevronRight, LogOut,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { APP_NAME } from '@/lib/constants'
+import { getUser, logout } from '@/lib/auth'
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Home, BookOpen, Library, FolderOpen, NotebookPen,
@@ -56,6 +57,13 @@ const NAV = [
 
 export function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const user = getUser()
+
+  function handleLogout() {
+    logout()
+    router.push('/')
+  }
 
   return (
     <aside className="w-64 bg-white border-r border-slate-100 flex flex-col h-full overflow-y-auto shrink-0">
@@ -112,16 +120,25 @@ export function Sidebar() {
       </nav>
 
       {/* User footer */}
-      <div className="px-4 py-3 border-t border-slate-100">
+      <div className="px-4 py-3 border-t border-slate-100 space-y-2">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-sm">
-            🎓
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-sm shrink-0">
+            {user?.avatar ?? '🎓'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-slate-700 truncate">Nguyễn Nguyên Bảo</p>
-            <p className="text-[10px] text-slate-400">Lớp 6A7 · THCS Dịch Vọng Hậu</p>
+            <p className="text-xs font-semibold text-slate-700 truncate">{user?.name ?? 'Học sinh'}</p>
+            <p className="text-[10px] text-slate-400 truncate">
+              {user?.class ? `Lớp ${user.class} · ` : ''}{user?.school ?? ''}
+            </p>
           </div>
         </div>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors group"
+        >
+          <LogOut size={13} className="group-hover:text-red-500" />
+          Đăng xuất
+        </button>
       </div>
     </aside>
   )
