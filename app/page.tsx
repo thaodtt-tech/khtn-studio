@@ -135,6 +135,21 @@ export default function LandingPage() {
         <div className="absolute top-40 left-0 w-48 h-48 bg-emerald-100 rounded-full blur-3xl opacity-40 -z-10" />
 
         <div className="max-w-4xl mx-auto text-center space-y-6">
+          {/* Logo + App name */}
+          <div className="flex flex-col items-center gap-4 mb-2">
+            <Image
+              src="/logo.png"
+              alt={APP_NAME}
+              width={120}
+              height={120}
+              className="rounded-3xl shadow-xl ring-4 ring-blue-100"
+            />
+            <div>
+              <div className="text-3xl font-extrabold text-slate-900 tracking-tight">{APP_NAME}</div>
+              <div className="text-sm text-slate-400 mt-0.5">Khoa học Tự nhiên THCS · Lớp 6–9</div>
+            </div>
+          </div>
+
           {/* Badge */}
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-100">
             <Zap size={11} /> Theo chương trình GDPT 2018 — 3 bộ sách
