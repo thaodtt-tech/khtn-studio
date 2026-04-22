@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Star, Eye, Bookmark, BookmarkCheck, X, BookOpen, Download } from 'lucide-react'
+import { Search, Star, Eye, Bookmark, BookmarkCheck, X, BookOpen, Download, Play } from 'lucide-react'
 import { cn, BRANCH_META, GRADE_LABELS, RESOURCE_TYPE_META } from '@/lib/utils'
 import { RESOURCES } from '@/data/resources'
 import type { Resource, Grade, SubjectBranch, ResourceType } from '@/types'
@@ -35,11 +35,20 @@ function PdfModal({ resource, onClose }: { resource: Resource; onClose: () => vo
         </div>
       </div>
       <div className="flex-1 min-h-0" onClick={e => e.stopPropagation()}>
-        <iframe
-          src={previewUrl(resource.url!)}
-          className="w-full h-full border-0"
-          allow="autoplay"
-        />
+        {resource.url!.endsWith('.mp4') ? (
+          <video
+            src={resource.url!}
+            controls
+            autoPlay
+            className="w-full h-full bg-black"
+          />
+        ) : (
+          <iframe
+            src={previewUrl(resource.url!)}
+            className="w-full h-full border-0"
+            allow="autoplay"
+          />
+        )}
       </div>
     </div>
   )
@@ -101,7 +110,8 @@ function ResourceCard({ resource, saved, onSave, onRead }: {
           onClick={onRead}
           className="mt-3 flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg text-xs font-medium bg-teal-50 text-teal-700 hover:bg-teal-100 transition-colors"
         >
-          <BookOpen size={12} /> {resource.type === 'video' ? 'Xem video' : 'Đọc online'}
+          {resource.url?.endsWith('.mp4') ? <Play size={12} /> : <BookOpen size={12} />}
+          {resource.type === 'video' ? 'Xem video' : 'Đọc online'}
         </button>
       )}
     </div>
