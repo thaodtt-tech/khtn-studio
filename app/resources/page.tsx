@@ -11,7 +11,7 @@ const BRANCHES: (SubjectBranch | 'all')[] = ['all', 'khtn', 'physics', 'chemistr
 const TYPES: (ResourceType | 'all')[] = ['all', 'article', 'pdf', 'video', 'mindmap', 'exercise', 'simulation', 'experiment', 'image']
 
 function previewUrl(url: string) {
-  // Convert Google Drive view URL to embeddable preview URL
+  if (url.includes('youtube.com/embed/')) return url
   return url.replace(/\/view.*$/, '/preview')
 }
 
@@ -101,7 +101,7 @@ function ResourceCard({ resource, saved, onSave, onRead }: {
           onClick={onRead}
           className="mt-3 flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg text-xs font-medium bg-teal-50 text-teal-700 hover:bg-teal-100 transition-colors"
         >
-          <BookOpen size={12} /> Đọc online
+          <BookOpen size={12} /> {resource.type === 'video' ? 'Xem video' : 'Đọc online'}
         </button>
       )}
     </div>
