@@ -57,6 +57,7 @@ export interface Resource {
   topic: string
   subjectId: string
   url?: string
+  content?: string
   thumbnailEmoji: string
   author: string
   savedCount: number

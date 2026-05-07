@@ -15,6 +15,85 @@ function previewUrl(url: string) {
   return url.replace(/\/view.*$/, '/preview')
 }
 
+function inlineMd(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+}
+
+function renderArticle(md: string) {
+  const lines = md.split('\n')
+  const elements: React.ReactNode[] = []
+  let listItems: string[] = []
+  let k = 0
+
+  function flushList() {
+    if (!listItems.length) return
+    elements.push(
+      <ul key={k++} className="list-disc pl-5 space-y-1 my-2">
+        {listItems.map((item, i) => (
+          <li key={i} className="text-sm text-slate-700 leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: inlineMd(item) }} />
+        ))}
+      </ul>
+    )
+    listItems = []
+  }
+
+  for (const line of lines) {
+    if (line.startsWith('## ')) {
+      flushList()
+      elements.push(<h2 key={k++} className="text-base font-bold text-slate-800 mt-6 mb-2 pb-1 border-b border-slate-200">{line.slice(3)}</h2>)
+    } else if (line.startsWith('### ')) {
+      flushList()
+      elements.push(<h3 key={k++} className="text-sm font-semibold text-slate-700 mt-4 mb-1.5">{line.slice(4)}</h3>)
+    } else if (line.startsWith('> ')) {
+      flushList()
+      elements.push(
+        <div key={k++} className="border-l-4 border-blue-300 bg-blue-50 px-3 py-2 my-2 rounded-r-lg">
+          <p className="text-sm text-blue-800" dangerouslySetInnerHTML={{ __html: inlineMd(line.slice(2)) }} />
+        </div>
+      )
+    } else if (line.startsWith('- ')) {
+      listItems.push(line.slice(2))
+    } else if (line.trim() === '') {
+      flushList()
+    } else {
+      flushList()
+      elements.push(
+        <p key={k++} className="text-sm text-slate-700 leading-relaxed my-1.5"
+          dangerouslySetInnerHTML={{ __html: inlineMd(line) }} />
+      )
+    }
+  }
+  flushList()
+  return elements
+}
+
+function ArticleModal({ resource, onClose }: { resource: Resource; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-black/60" onClick={onClose}>
+      <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200 shrink-0" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-xl">{resource.thumbnailEmoji}</span>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-slate-800 truncate">{resource.title}</p>
+            <p className="text-xs text-slate-400">🎓 {resource.author}</p>
+          </div>
+        </div>
+        <button onClick={onClose} className="p-1.5 rounded hover:bg-slate-100 transition-colors ml-4 shrink-0">
+          <X size={16} />
+        </button>
+      </div>
+      <div className="flex-1 overflow-y-auto bg-white" onClick={e => e.stopPropagation()}>
+        <div className="max-w-2xl mx-auto px-6 py-6">
+          {renderArticle(resource.content ?? resource.description)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function PdfModal({ resource, onClose }: { resource: Resource; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black/70" onClick={onClose}>
@@ -105,13 +184,13 @@ function ResourceCard({ resource, saved, onSave, onRead }: {
         </div>
       </div>
 
-      {resource.url && (
+      {(resource.url || resource.type === 'article') && (
         <button
           onClick={onRead}
           className="mt-3 flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg text-xs font-medium bg-teal-50 text-teal-700 hover:bg-teal-100 transition-colors"
         >
-          {resource.url?.endsWith('.mp4') ? <Play size={12} /> : <BookOpen size={12} />}
-          {resource.type === 'video' ? 'Xem video' : 'Đọc online'}
+          {resource.type === 'video' ? <Play size={12} /> : <BookOpen size={12} />}
+          {resource.type === 'video' ? 'Xem video' : resource.type === 'article' ? 'Đọc bài viết' : 'Đọc online'}
         </button>
       )}
     </div>
@@ -126,6 +205,7 @@ export default function ResourcesPage() {
   const [saved, setSaved] = useState<Set<string>>(new Set(['r1', 'r7', 'r9', 'r10']))
   const [showSavedOnly, setShowSavedOnly] = useState(false)
   const [viewing, setViewing] = useState<Resource | null>(null)
+  const [readingArticle, setReadingArticle] = useState<Resource | null>(null)
 
   const filtered = RESOURCES.filter(r =>
     (!search || r.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -145,9 +225,15 @@ export default function ResourcesPage() {
     })
   }
 
+  function handleRead(r: Resource) {
+    if (r.type === 'article') setReadingArticle(r)
+    else setViewing(r)
+  }
+
   return (
     <div>
       {viewing && <PdfModal resource={viewing} onClose={() => setViewing(null)} />}
+      {readingArticle && <ArticleModal resource={readingArticle} onClose={() => setReadingArticle(null)} />}
 
       <div className="mb-6">
         <h1 className="page-title">Thư viện số KHTN</h1>
@@ -229,7 +315,7 @@ export default function ResourcesPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filtered.map(r => (
-          <ResourceCard key={r.id} resource={r} saved={saved.has(r.id)} onSave={() => toggleSave(r.id)} onRead={() => setViewing(r)} />
+          <ResourceCard key={r.id} resource={r} saved={saved.has(r.id)} onSave={() => toggleSave(r.id)} onRead={() => handleRead(r)} />
         ))}
       </div>
 
