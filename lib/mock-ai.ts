@@ -1,4 +1,5 @@
-import type { Flashcard, MindMapNode, Report, Grade, SubjectBranch } from '@/types'
+import type { Flashcard, MindMapNode, Report, Grade, SubjectBranch, Notebook } from '@/types'
+import { NOTEBOOKS } from '@/data/notebooks'
 
 // Simulates AI processing delay
 export function delay(ms = 1500): Promise<void> {
@@ -65,8 +66,86 @@ export async function mockGenerateQuestions(topic: string, count = 5): Promise<s
 
 // ─── Mock Mind Map ────────────────────────────────────────────────────────────
 
+function buildFromNotebook(nb: Notebook): MindMapNode {
+  const branches: MindMapNode[] = []
+
+  // Branch 1: Key concepts
+  if (nb.keyConcepts?.length) {
+    branches.push({
+      id: 'c1', label: 'Khái niệm', emoji: '💡', color: '#6366f1',
+      children: nb.keyConcepts.slice(0, 4).map((kc, i) => ({
+        id: `c1${i}`,
+        label: kc.term,
+        notes: kc.definition,
+      })),
+    })
+  }
+
+  // Branch 2: Formulas (physics/chemistry) or Vocabulary (biology)
+  if (nb.formulas?.length) {
+    branches.push({
+      id: 'c2', label: 'Công thức', emoji: '📐', color: '#f59e0b',
+      children: nb.formulas.slice(0, 4).map((f, i) => ({
+        id: `c2${i}`,
+        label: f.name,
+        notes: `${f.expression}  |  Đơn vị: ${f.unit}\n${f.description}`,
+      })),
+    })
+  } else if (nb.vocabulary?.length) {
+    branches.push({
+      id: 'c2', label: 'Thuật ngữ', emoji: '📖', color: '#f59e0b',
+      children: nb.vocabulary.slice(0, 4).map((v, i) => ({
+        id: `c2${i}`,
+        label: v.term,
+        notes: v.meaning,
+      })),
+    })
+  }
+
+  // Branch 3: Important questions
+  if (nb.importantQuestions?.length) {
+    branches.push({
+      id: 'c3', label: 'Câu hỏi trọng tâm', emoji: '❓', color: '#10b981',
+      children: nb.importantQuestions.slice(0, 4).map((q, i) => ({
+        id: `c3${i}`,
+        label: q.length > 28 ? q.slice(0, 28) + '…' : q,
+        notes: q,
+      })),
+    })
+  }
+
+  // Branch 4: Notes & tips
+  if (nb.notes) {
+    const tips = nb.notes.split(/[.。!]/g).map(s => s.trim()).filter(s => s.length > 5)
+    branches.push({
+      id: 'c4', label: 'Lưu ý', emoji: '⚠️', color: '#ec4899',
+      children: tips.slice(0, 3).map((tip, i) => ({
+        id: `c4${i}`,
+        label: tip.length > 28 ? tip.slice(0, 28) + '…' : tip,
+        notes: tip,
+      })),
+    })
+  }
+
+  return {
+    id: 'root',
+    label: nb.topic,
+    emoji: nb.emoji,
+    color: nb.color,
+    children: branches,
+  }
+}
+
 export async function mockGenerateMindMap(topic: string): Promise<MindMapNode> {
   await delay(2000)
+
+  const notebook = NOTEBOOKS.find(nb =>
+    nb.topic.toLowerCase().includes(topic.toLowerCase()) ||
+    topic.toLowerCase().includes(nb.topic.toLowerCase())
+  )
+  if (notebook) return buildFromNotebook(notebook)
+
+  // Generic template with notes for unknown topics
   return {
     id: 'root',
     label: topic,
@@ -76,33 +155,33 @@ export async function mockGenerateMindMap(topic: string): Promise<MindMapNode> {
       {
         id: 'c1', label: 'Khái niệm', emoji: '💡', color: '#6366f1',
         children: [
-          { id: 'c1a', label: 'Định nghĩa' },
-          { id: 'c1b', label: 'Lịch sử phát hiện' },
-          { id: 'c1c', label: 'Phân loại' },
+          { id: 'c1a', label: 'Định nghĩa', notes: `${topic} là khái niệm/hiện tượng khoa học cơ bản trong chương trình KHTN. Nắm rõ định nghĩa và phân biệt với các khái niệm liên quan.` },
+          { id: 'c1b', label: 'Lịch sử phát hiện', notes: `Khái niệm ${topic} được nghiên cứu và phát triển qua nhiều thế kỷ, đặt nền móng quan trọng cho khoa học hiện đại.` },
+          { id: 'c1c', label: 'Phân loại', notes: `${topic} có thể được phân loại thành nhiều dạng/loại khác nhau tùy theo đặc điểm và điều kiện cụ thể.` },
         ],
       },
       {
         id: 'c2', label: 'Công thức', emoji: '📐', color: '#f59e0b',
         children: [
-          { id: 'c2a', label: 'Công thức chính' },
-          { id: 'c2b', label: 'Đơn vị đo' },
-          { id: 'c2c', label: 'Biến đổi công thức' },
+          { id: 'c2a', label: 'Công thức chính', notes: `Biểu thức toán học mô tả mối quan hệ giữa các đại lượng trong ${topic}. Cần ghi nhớ và hiểu rõ ý nghĩa từng ký hiệu.` },
+          { id: 'c2b', label: 'Đơn vị đo', notes: `Mỗi đại lượng trong ${topic} có đơn vị đo riêng theo hệ SI. Lưu ý đổi đơn vị khi giải bài tập.` },
+          { id: 'c2c', label: 'Biến đổi công thức', notes: `Từ công thức gốc có thể suy ra các công thức biến đổi để tính từng đại lượng khi biết các đại lượng còn lại.` },
         ],
       },
       {
         id: 'c3', label: 'Ứng dụng', emoji: '⚙️', color: '#10b981',
         children: [
-          { id: 'c3a', label: 'Trong đời sống' },
-          { id: 'c3b', label: 'Trong công nghệ' },
-          { id: 'c3c', label: 'Thí nghiệm liên quan' },
+          { id: 'c3a', label: 'Trong đời sống', notes: `${topic} xuất hiện trong nhiều hiện tượng và thiết bị quen thuộc trong cuộc sống hằng ngày. Quan sát xung quanh để nhận biết.` },
+          { id: 'c3b', label: 'Trong công nghệ', notes: `Các kỹ sư và nhà khoa học ứng dụng kiến thức về ${topic} trong thiết kế máy móc, thiết bị và công nghệ hiện đại.` },
+          { id: 'c3c', label: 'Thí nghiệm liên quan', notes: `Có thể thực hiện thí nghiệm để kiểm chứng lý thuyết về ${topic}. Chuẩn bị dụng cụ và ghi chép kết quả cẩn thận.` },
         ],
       },
       {
         id: 'c4', label: 'Ghi nhớ', emoji: '✅', color: '#ec4899',
         children: [
-          { id: 'c4a', label: 'Điểm mấu chốt' },
-          { id: 'c4b', label: 'Dễ nhầm lẫn' },
-          { id: 'c4c', label: 'Mẹo học thuộc' },
+          { id: 'c4a', label: 'Điểm mấu chốt', notes: `Nắm chắc định nghĩa, công thức cơ bản và điều kiện áp dụng của ${topic}. Đây là nền tảng để giải mọi dạng bài tập.` },
+          { id: 'c4b', label: 'Dễ nhầm lẫn', notes: `Học sinh thường nhầm lẫn giữa ${topic} và các khái niệm liên quan. Cần phân biệt rõ từng trường hợp cụ thể.` },
+          { id: 'c4c', label: 'Mẹo học thuộc', notes: `Vẽ sơ đồ tư duy, làm bài tập từ dễ đến khó, ôn lại sau mỗi ngày học giúp ghi nhớ ${topic} hiệu quả và lâu dài.` },
         ],
       },
     ],
