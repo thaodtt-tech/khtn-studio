@@ -578,6 +578,261 @@ Máy bay dân dụng | 800–900
   { id: 'vtl-08', title: 'Thí nghiệm đường truyền tia sáng qua thấu kính phân kì – KHTN 9 CTST', description: 'Video thí nghiệm xác định đường truyền của ba chùm tia sáng hẹp song song qua thấu kính phân kì, xác định tiêu điểm và tiêu cự.', type: 'video', grade: 9, branch: 'physics', topic: 'Ánh sáng', subjectId: 'l9-khtn', url: 'https://www.youtube.com/embed/tZ-hKcvX2cw', thumbnailEmoji: '🔭', author: 'Vũ Thị Lê (@VTL-9)', savedCount: 0, viewCount: 0, createdAt: '2026-04-22', tags: ['thí nghiệm', 'thấu kính phân kì', 'tia sáng', 'lớp 9'], isFeatured: false },
   { id: 'vtl-09', title: 'Thí nghiệm mạch điện song song – Vật lý lớp 9', description: 'Thí nghiệm thực tế lắp mạch điện song song, đo cường độ dòng điện qua từng nhánh và kiểm chứng quy tắc cường độ dòng điện trong mạch song song.', type: 'video', grade: 9, branch: 'physics', topic: 'Điện học', subjectId: 'l9-khtn', url: 'https://www.youtube.com/embed/3MzJPcZUVkg', thumbnailEmoji: '⚡', author: 'Vũ Thị Lê (@VTL-9)', savedCount: 0, viewCount: 0, createdAt: '2026-04-22', tags: ['thí nghiệm', 'mạch điện', 'song song', 'lớp 9'], isFeatured: false },
   { id: 'vtl-10', title: 'KHTN 9 – Thí nghiệm tính chất vật lí của tinh bột và cellulose', description: 'Video thí nghiệm khảo sát các tính chất vật lí của tinh bột (hồ tinh bột, phản ứng với iốt) và cellulose. Nội dung Bài 28 – SGK Chân Trời Sáng Tạo lớp 9.', type: 'video', grade: 9, branch: 'chemistry', topic: 'Hóa hữu cơ', subjectId: 'l9-khtn', url: 'https://www.youtube.com/embed/ySbLFyYgxLs', thumbnailEmoji: '🧫', author: 'Vũ Thị Lê (@VTL-9)', savedCount: 0, viewCount: 0, createdAt: '2026-04-22', tags: ['thí nghiệm', 'tinh bột', 'cellulose', 'hữu cơ', 'lớp 9'], isFeatured: false },
+
+  // ─── Bài viết lý thuyết – Nguồn VietJack KHTN 6 ──────────────────────────────
+  { id: 'art-l6-luc', title: 'Lực và các tác dụng của lực – KHTN 6', description: 'Bài viết hệ thống toàn bộ kiến thức về lực: định nghĩa, các tác dụng của lực lên chuyển động và hình dạng vật, phân biệt lực tiếp xúc và lực không tiếp xúc, cách đo lực.', type: 'article', grade: 6, branch: 'physics', topic: 'Lực', subjectId: 'l6-physics-force', thumbnailEmoji: '💪', author: 'VietJack / KHTN Studio', savedCount: 0, viewCount: 0, createdAt: '2026-05-07', tags: ['lực', 'tác dụng của lực', 'lực tiếp xúc', 'lớp 6'], isFeatured: true, content: `## Lực là gì?
+
+**Lực** là một tác nhân có khả năng làm thay đổi trạng thái chuyển động hoặc hình dạng của vật.
+
+Mỗi lực đều có: điểm đặt, phương, chiều và độ lớn. Trong sơ đồ, lực được biểu diễn bằng **mũi tên** có chiều dài tỉ lệ với độ lớn.
+
+## Các tác dụng của lực
+
+Lực tác dụng lên vật có thể:
+
+### 1. Thay đổi tốc độ chuyển động
+- Làm vật từ **đứng yên chuyển sang chuyển động**
+- Làm vật đang chuyển động **nhanh dần** hoặc **chậm dần**
+- Làm vật đang chuyển động **dừng lại**
+
+### 2. Thay đổi hướng chuyển động
+Lực làm đổi chiều của vật đang chuyển động.
+
+> **Ví dụ:** Cầu thủ đá lệch hướng quả bóng đang lăn. Thủ môn bắt bóng bay đổi hướng.
+
+### 3. Làm biến dạng vật
+Thay đổi hình dạng, kích thước của vật.
+
+> **Ví dụ:** Ấn tay lên mặt đệm → đệm lõm xuống. Kéo lò xo → lò xo dãn ra.
+
+> **Lưu ý:** Một lực có thể tác dụng đồng thời hai hoặc cả ba hiệu quả trên.
+
+## Lực tiếp xúc và lực không tiếp xúc
+
+### Lực tiếp xúc
+Những lực xuất hiện khi hai vật **tiếp xúc trực tiếp** với nhau.
+
+- Tay đẩy cửa, chân đá bóng, kéo dây thừng
+- Lực ma sát khi vật trượt trên mặt bàn
+
+### Lực không tiếp xúc
+Lực xuất hiện khi vật gây lực **không chạm** vào vật chịu lực.
+
+- **Lực hấp dẫn:** Trái Đất hút quả táo rơi xuống
+- **Lực từ:** Nam châm hút các vật bằng sắt, thép
+- **Lực điện:** Thanh nhựa nhiễm điện hút mẩu giấy nhỏ
+
+## Đo lực – Lực kế
+
+**Lực kế** là dụng cụ đo độ lớn của lực. Đơn vị lực là **Newton (N)**, ký hiệu N.
+
+> **Mẹo nhớ:** 1 kg vật có trọng lượng xấp xỉ **10 N** trên bề mặt Trái Đất.
+> Vì vậy một cuốn sách nặng 200 g có trọng lượng khoảng **2 N**.` },
+
+  { id: 'art-l6-hapdan', title: 'Lực hấp dẫn và trọng lực – KHTN 6', description: 'Bài viết giải thích lực hấp dẫn, trọng lực và trọng lượng. Phân biệt khối lượng và trọng lượng, công thức tính, ứng dụng trong thực tiễn và trong vũ trụ.', type: 'article', grade: 6, branch: 'physics', topic: 'Lực hấp dẫn', subjectId: 'l6-physics-force', thumbnailEmoji: '🌍', author: 'VietJack / KHTN Studio', savedCount: 0, viewCount: 0, createdAt: '2026-05-07', tags: ['lực hấp dẫn', 'trọng lực', 'trọng lượng', 'lớp 6'], isFeatured: false, content: `## Lực hấp dẫn là gì?
+
+**Lực hấp dẫn** là lực hút giữa hai vật bất kì có khối lượng trong vũ trụ. Đây là lực *không tiếp xúc*, tác dụng qua khoảng không gian.
+
+## Đặc điểm của lực hấp dẫn
+
+- Phụ thuộc vào **khối lượng:** vật càng nặng, lực hút càng lớn
+- Phụ thuộc vào **khoảng cách:** hai vật càng gần, lực càng mạnh
+- Giữa các vật nhỏ hằng ngày: lực rất yếu, khó nhận thấy
+- Giữa các thiên thể: lực rất lớn, quyết định cấu trúc vũ trụ
+
+## Trọng lực và trọng lượng
+
+**Trọng lực** là lực hấp dẫn của Trái Đất tác dụng lên vật, kéo vật về phía tâm Trái Đất (hướng thẳng đứng xuống dưới).
+
+**Trọng lượng (P)** là độ lớn của trọng lực tác dụng lên vật.
+
+> **Công thức:** P = m × g
+> m: khối lượng (kg) — g ≈ 10 m/s² (gia tốc trọng trường tại Trái Đất)
+> **Ví dụ:** Vật có m = 5 kg → P = 5 × 10 = **50 N**
+
+## Phân biệt khối lượng và trọng lượng
+
+- **Khối lượng (m):** Lượng chất trong vật, không thay đổi dù ở đâu. Đơn vị: kg
+- **Trọng lượng (P):** Lực hút của Trái Đất lên vật, thay đổi theo nơi đo. Đơn vị: N
+
+> Trên Mặt Trăng, g ≈ 1,6 m/s² nên cùng vật đó nhẹ hơn 6 lần so với Trái Đất!
+
+## Ví dụ thực tiễn
+
+- Mặt Trăng quay quanh Trái Đất nhờ lực hấp dẫn giữ ổn định quỹ đạo
+- Các hành tinh chuyển động quanh Mặt Trời
+- Quả táo rơi xuống khi buông tay
+- Nước chảy từ cao xuống thấp
+- Nhảy lên rồi lại rơi xuống` },
+
+  { id: 'art-l6-nhiet-nang', title: 'Nhiệt năng và các dạng năng lượng – KHTN 6', description: 'Bài viết giải thích nhiệt năng, điện năng, quang năng, hóa năng và sự chuyển hóa năng lượng. Kèm ví dụ thực tế về các thiết bị chuyển đổi năng lượng.', type: 'article', grade: 6, branch: 'physics', topic: 'Năng lượng', subjectId: 'l6-physics-force', thumbnailEmoji: '🔥', author: 'VietJack / KHTN Studio', savedCount: 0, viewCount: 0, createdAt: '2026-05-07', tags: ['nhiệt năng', 'năng lượng', 'chuyển hóa', 'lớp 6'], isFeatured: false, content: `## Năng lượng là gì?
+
+**Năng lượng** là khả năng thực hiện công hoặc làm thay đổi nhiệt độ của một vật. Năng lượng tồn tại dưới nhiều dạng và có thể chuyển hóa qua lại.
+
+## Nhiệt năng
+
+**Nhiệt năng** là năng lượng liên quan đến chuyển động hỗn độn của các phân tử bên trong vật chất.
+
+- Vật có nhiệt độ càng cao → nhiệt năng càng **lớn**
+- Nhiệt năng truyền từ vật **nóng** sang vật **lạnh** hơn
+- Nguồn nhiệt năng quen thuộc: Mặt Trời, ngọn lửa, bếp gas, bóng đèn sợi đốt
+
+### Các cách làm tăng nhiệt năng
+- **Thực hiện công:** Ma sát (xoa hai tay vào nhau → ấm lên)
+- **Truyền nhiệt:** Đặt vật lạnh gần nguồn nóng
+
+## Các dạng năng lượng khác
+
+### Năng lượng điện (Điện năng)
+Năng lượng của dòng điện. Ứng dụng: thắp sáng, quạt, tivi, sạc điện thoại.
+
+### Năng lượng ánh sáng (Quang năng)
+Dạng năng lượng bức xạ điện từ mà mắt có thể nhìn thấy. Nguồn: Mặt Trời, đèn điện.
+
+### Năng lượng hóa học (Hóa năng)
+Lưu trữ trong liên kết hóa học. Nguồn: thức ăn, pin, xăng dầu, củi.
+
+### Cơ năng
+Năng lượng liên quan đến chuyển động (động năng) và vị trí (thế năng).
+
+## Chuyển hóa năng lượng
+
+Năng lượng không tự sinh ra hay mất đi — chỉ **chuyển từ dạng này sang dạng khác**.
+
+- Bóng đèn: **Điện năng → Quang năng + Nhiệt năng**
+- Quạt điện: **Điện năng → Cơ năng + Nhiệt năng**
+- Ô tô chạy: **Hóa năng (xăng) → Cơ năng + Nhiệt năng**
+- Cây xanh: **Quang năng (ánh sáng) → Hóa năng (tinh bột)**
+- Pin điện: **Hóa năng → Điện năng**
+
+> **Định luật bảo toàn năng lượng:** Tổng năng lượng trong một hệ cô lập luôn không đổi.` },
+
+  { id: 'art-l6-nang-luong-tt', title: 'Năng lượng tái tạo: Gió và Mặt trời – KHTN 6', description: 'Bài viết về năng lượng gió và năng lượng mặt trời: định nghĩa, nguyên lý, ứng dụng thực tế, ưu điểm so với nhiên liệu hóa thạch. Liên hệ thực tiễn Việt Nam.', type: 'article', grade: 6, branch: 'physics', topic: 'Năng lượng tái tạo', subjectId: 'l6-physics-force', thumbnailEmoji: '☀️', author: 'VietJack / KHTN Studio', savedCount: 0, viewCount: 0, createdAt: '2026-05-07', tags: ['năng lượng tái tạo', 'năng lượng mặt trời', 'năng lượng gió', 'lớp 6'], isFeatured: true, content: `## Tại sao cần năng lượng tái tạo?
+
+Các nguồn năng lượng hóa thạch (than đá, dầu mỏ, khí tự nhiên) đang **cạn dần** và gây ô nhiễm môi trường, đẩy nhanh biến đổi khí hậu. Vì vậy, con người đang chuyển sang khai thác **năng lượng tái tạo** — nguồn năng lượng sạch, vô hạn từ thiên nhiên.
+
+## Năng lượng Mặt trời
+
+**Định nghĩa:** Năng lượng bức xạ ánh sáng và nhiệt xuất phát từ Mặt Trời.
+
+### Đặc điểm
+- **Vô tận:** Mặt Trời sẽ còn chiếu sáng hàng tỉ năm nữa
+- **Sạch:** Không thải CO₂, không gây ô nhiễm
+- **Phổ biến:** Hầu hết mọi nơi trên Trái Đất đều nhận được ánh sáng Mặt Trời
+
+### Ứng dụng
+- **Tấm pin mặt trời (solar panel):** Chuyển quang năng thành điện năng cho nhà ở và nhà máy
+- **Máy nước nóng năng lượng mặt trời:** Đun nóng nước sinh hoạt
+- **Quang hợp:** Năng lượng Mặt Trời giúp cây xanh tạo chất hữu cơ nuôi sống toàn bộ chuỗi thức ăn
+
+## Năng lượng Gió
+
+**Định nghĩa:** Động năng của khối không khí chuyển động trong bầu khí quyển.
+
+### Nguyên lý hình thành gió
+Gió là sự chuyển động của không khí từ khu vực **áp suất cao** đến khu vực **áp suất thấp**. Nguyên nhân: Mặt Trời làm nóng không đều bề mặt Trái Đất.
+
+### Ứng dụng
+- **Tua-bin gió:** Cánh quạt lớn quay nhờ sức gió → phát điện
+- **Lịch sử:** Thuyền buồm, cối xay gió đã dùng sức gió từ hàng nghìn năm
+
+## So sánh
+
+- Năng lượng mặt trời: cần ánh sáng ban ngày, hoạt động tốt vùng nhiều nắng
+- Năng lượng gió: hoạt động cả ban đêm, cần vùng có gió mạnh ổn định
+
+> **Tại Việt Nam:** Bờ biển dài 3.000 km → tiềm năng gió lớn. Miền Trung và miền Nam nắng nhiều → pin mặt trời rất hiệu quả. Việt Nam đang là một trong những nước phát triển năng lượng tái tạo nhanh nhất Đông Nam Á.` },
+
+  { id: 'art-l6-chat-vatthe', title: 'Chất, vật thể và vật liệu – KHTN 6', description: 'Bài viết phân biệt chất, vật thể và vật liệu với ví dụ thực tế. Phân loại vật liệu theo nguồn gốc và công dụng. Tính chất vật lí đặc trưng của một số vật liệu phổ biến.', type: 'article', grade: 6, branch: 'chemistry', topic: 'Chất và vật thể', subjectId: 'l6-chemistry-matter', thumbnailEmoji: '🧱', author: 'VietJack / KHTN Studio', savedCount: 0, viewCount: 0, createdAt: '2026-05-07', tags: ['chất', 'vật thể', 'vật liệu', 'tính chất', 'lớp 6'], isFeatured: true, content: `## Chất là gì?
+
+**Chất** là dạng vật chất tồn tại trong tự nhiên hoặc do con người tạo ra. Mỗi chất có những tính chất vật lí và hóa học đặc trưng riêng.
+
+> **Ví dụ:** nước, muối ăn (NaCl), đường (C₁₂H₂₂O₁₁), sắt (Fe), oxy (O₂), carbon dioxide (CO₂).
+
+## Vật thể là gì?
+
+**Vật thể** là những đồ vật, sự vật tồn tại xung quanh chúng ta. Các vật thể đều được tạo thành từ một hoặc nhiều **chất**.
+
+### Mối quan hệ chất – vật thể
+
+- **Một chất → nhiều vật thể:** Gỗ tạo nên bàn, ghế, giường, tủ, sàn nhà
+- **Một vật thể → nhiều chất:** Xe đạp gồm: thép (khung), cao su (lốp), nhựa (tay cầm), nhôm (vành)
+
+> **Cách phân biệt nhanh:**
+> "Nước" → **chất** | "Chai nước" → **vật thể**
+> "Gỗ" → **chất** | "Cái bàn" → **vật thể**
+> "Thủy tinh" → **chất** | "Cốc thủy tinh" → **vật thể**
+
+## Vật liệu là gì?
+
+**Vật liệu** là chất (hoặc hỗn hợp chất) được con người sử dụng làm nguyên liệu để tạo ra các sản phẩm phục vụ cuộc sống.
+
+### Phân loại theo nguồn gốc
+
+- **Tự nhiên:** Gỗ, đá, cao su thiên nhiên, len, bông, đất sét
+- **Nhân tạo:** Nhựa tổng hợp, thủy tinh, xi măng, thép, sợi carbon
+
+### Phân loại theo công dụng
+
+- **Xây dựng:** Xi măng, gạch, cát, sắt thép, kính
+- **Dệt may:** Sợi cotton, polyester, lụa tự nhiên
+- **Điện tử:** Silicon, đồng, nhựa cách điện
+- **Y tế:** Titan (cấy ghép), latex (găng tay), thủy tinh (ống nghiệm)
+
+## Tính chất của một số vật liệu phổ biến
+
+- **Gỗ:** Nhẹ, dễ gia công, cách nhiệt tốt → nội thất, xây dựng
+- **Thủy tinh:** Trong suốt, cứng, dễ vỡ → chai lọ, kính cửa sổ
+- **Nhựa:** Nhẹ, bền, dễ tạo hình, cách điện → bao bì, đồ gia dụng
+- **Đá vôi (CaCO₃):** Rắn, không tan trong nước, màu trắng xám → xây dựng, sản xuất xi măng, vôi
+- **Thép:** Cứng, dẫn điện/nhiệt, bền → cầu đường, khung nhà, máy móc` },
+
+  { id: 'art-l6-nuoc', title: 'Các thể của nước và vòng tuần hoàn nước – KHTN 6', description: 'Bài viết trình bày ba thể của nước (rắn, lỏng, khí), các quá trình chuyển thể và bốn giai đoạn của vòng tuần hoàn nước trong tự nhiên. Ý nghĩa với khí hậu và sự sống.', type: 'article', grade: 6, branch: 'chemistry', topic: 'Nước và vòng tuần hoàn', subjectId: 'l6-chemistry-matter', thumbnailEmoji: '💧', author: 'VietJack / KHTN Studio', savedCount: 0, viewCount: 0, createdAt: '2026-05-07', tags: ['nước', 'các thể', 'vòng tuần hoàn', 'chuyển thể', 'lớp 6'], isFeatured: false, content: `## Ba thể của nước
+
+Nước là chất quen thuộc nhất trong cuộc sống và là chất **duy nhất** tồn tại tự nhiên ở cả ba thể trong điều kiện Trái Đất.
+
+### Thể rắn – Nước đá, băng, tuyết
+- **Hình dạng:** Xác định, cứng chắc
+- **Thể tích:** Xác định, không thay đổi
+- **Điều kiện:** Nhiệt độ ≤ 0°C (ở áp suất khí quyển)
+
+### Thể lỏng – Nước thường
+- **Hình dạng:** Không cố định, theo hình dạng vật chứa
+- **Thể tích:** Xác định
+- **Điều kiện:** 0°C đến 100°C (ở áp suất khí quyển)
+
+### Thể khí – Hơi nước
+- **Hình dạng:** Không xác định, lan tỏa khắp nơi
+- **Thể tích:** Không xác định
+- **Điều kiện:** Trên 100°C hoặc bay hơi dần ở nhiệt độ thường
+
+## Các quá trình chuyển thể
+
+- **Nóng chảy:** Rắn → Lỏng (đá tan ở 0°C khi hấp thụ nhiệt)
+- **Đông đặc:** Lỏng → Rắn (nước đóng băng ở 0°C khi mất nhiệt)
+- **Bay hơi:** Lỏng → Khí (nước sôi ở 100°C hoặc bốc hơi chậm ở nhiệt độ thường)
+- **Ngưng tụ:** Khí → Lỏng (hơi nước gặp lạnh tạo giọt nước trên kính, sương buổi sáng)
+- **Thăng hoa:** Rắn → Khí trực tiếp (đá khô CO₂, băng phiến)
+
+## Vòng tuần hoàn của nước trong tự nhiên
+
+Nước luôn vận động theo một chu kỳ **khép kín liên tục** gọi là vòng tuần hoàn nước.
+
+### 4 giai đoạn chính
+
+**1. Bay hơi**
+Dưới tác dụng nhiệt của Mặt Trời, nước từ biển, hồ, sông, mặt đất bốc hơi lên cao. Cây cối cũng thoát hơi nước qua lá (thoát hơi nước).
+
+**2. Ngưng tụ**
+Hơi nước lên cao gặp không khí lạnh ngưng tụ thành các giọt nước nhỏ li ti tạo thành **mây** và **sương mù**.
+
+**3. Mưa (và tuyết)**
+Khi các giọt nước trong mây tụ lại đủ lớn và đủ nặng, rơi xuống thành **mưa** (vùng ôn đới/nhiệt đới) hoặc **tuyết** (vùng lạnh).
+
+**4. Chảy tràn và thấm đất**
+Nước mưa chảy tràn trên mặt đất vào sông, hồ, biển. Một phần thấm xuống đất thành **nước ngầm**. Nước lại bốc hơi và tiếp tục vòng mới.
+
+> **Ý nghĩa:** Vòng tuần hoàn nước điều phối khí hậu Trái Đất, phân phối nước ngọt cho sinh vật, hình thành địa hình (sông suối, thung lũng) và duy trì sự sống. Không có vòng tuần hoàn này, các vùng đất liền sẽ không có nước ngọt!` },
 ]
 
 export function getResourcesByGradeAndBranch(grade?: number, branch?: string, type?: string) {
