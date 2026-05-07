@@ -1,12 +1,24 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Eye, Pencil, Trash2, Users, Clock, Globe, Lock } from 'lucide-react'
+import { Plus, Eye, Pencil, Trash2, Users, Clock, Globe, Lock, X } from 'lucide-react'
 import { cn, BRANCH_META, GRADE_LABELS } from '@/lib/utils'
 import { GAMES } from '@/data/games'
 import { TEACHER_PROFILE } from '@/data/progress'
 import type { Game, GameType, Grade, SubjectBranch } from '@/types'
 import Link from 'next/link'
+
+type QuizItem     = { question: string; options: string[]; correctIndex: number; explanation: string }
+type FlashItem    = { term: string; definition: string }
+type DragItem     = { item: string; category: string }
+type MemoryItem   = { front: string; back: string }
+type FillItem     = { sentence: string; answer: string; distractors: string; explanation: string }
+type CrossItem    = { clue: string; answer: string }
+
+const ITEM_LABEL: Record<GameType, string> = {
+  'quiz': 'câu hỏi', 'flashcard-match': 'thẻ', 'drag-drop': 'mục',
+  'memory': 'cặp bài', 'fill-blank': 'câu', 'crossword': 'từ',
+}
 
 const GAME_TYPES: { type: GameType; label: string; emoji: string; desc: string }[] = [
   { type: 'quiz',           label: 'Quiz Challenge',      emoji: '🧠', desc: 'Câu hỏi trắc nghiệm có giải thích' },
@@ -32,41 +44,84 @@ export default function TeacherGameStudioPage() {
     grade: 8 as Grade, branch: 'physics' as SubjectBranch,
     topic: '', estimatedMinutes: 10,
   })
-  const [questions, setQuestions] = useState([
-    { question: '', options: ['', '', '', ''], correctIndex: 0, explanation: '' },
-  ])
-  const [creating, setCreating] = useState(false)
+  const [quizItems, setQuizItems]   = useState<QuizItem[]>([{ question: '', options: ['', '', '', ''], correctIndex: 0, explanation: '' }])
+  const [flashItems, setFlashItems] = useState<FlashItem[]>([{ term: '', definition: '' }])
+  const [dragCats, setDragCats]     = useState<string[]>(['Nhóm A', 'Nhóm B'])
+  const [dragItems, setDragItems]   = useState<DragItem[]>([{ item: '', category: 'Nhóm A' }])
+  const [memItems, setMemItems]     = useState<MemoryItem[]>([{ front: '', back: '' }])
+  const [fillItems, setFillItems]   = useState<FillItem[]>([{ sentence: '', answer: '', distractors: '', explanation: '' }])
+  const [crossItems, setCrossItems] = useState<CrossItem[]>([{ clue: '', answer: '' }])
+  const [creating, setCreating]     = useState(false)
 
-  function addQuestion() {
-    setQuestions(prev => [...prev, { question: '', options: ['', '', '', ''], correctIndex: 0, explanation: '' }])
+  function currentCount() {
+    const map: Record<GameType, number> = {
+      'quiz': quizItems.length, 'flashcard-match': flashItems.length,
+      'drag-drop': dragItems.length, 'memory': memItems.length,
+      'fill-blank': fillItems.length, 'crossword': crossItems.length,
+    }
+    return map[form.type]
   }
 
-  function updateQuestion(idx: number, field: string, value: any) {
-    setQuestions(prev => prev.map((q, i) => i === idx ? { ...q, [field]: value } : q))
+  function addItem() {
+    switch (form.type) {
+      case 'quiz':           setQuizItems(p  => [...p,  { question: '', options: ['', '', '', ''], correctIndex: 0, explanation: '' }]); break
+      case 'flashcard-match':setFlashItems(p => [...p,  { term: '', definition: '' }]); break
+      case 'drag-drop':      setDragItems(p  => [...p,  { item: '', category: dragCats[0] || '' }]); break
+      case 'memory':         setMemItems(p   => [...p,  { front: '', back: '' }]); break
+      case 'fill-blank':     setFillItems(p  => [...p,  { sentence: '', answer: '', distractors: '', explanation: '' }]); break
+      case 'crossword':      setCrossItems(p => [...p,  { clue: '', answer: '' }]); break
+    }
   }
 
-  function updateOption(qIdx: number, optIdx: number, value: string) {
-    setQuestions(prev => prev.map((q, i) => {
-      if (i !== qIdx) return q
-      const opts = [...q.options]; opts[optIdx] = value
-      return { ...q, options: opts }
-    }))
+  function resetItems() {
+    setQuizItems([{ question: '', options: ['', '', '', ''], correctIndex: 0, explanation: '' }])
+    setFlashItems([{ term: '', definition: '' }])
+    setDragCats(['Nhóm A', 'Nhóm B'])
+    setDragItems([{ item: '', category: 'Nhóm A' }])
+    setMemItems([{ front: '', back: '' }])
+    setFillItems([{ sentence: '', answer: '', distractors: '', explanation: '' }])
+    setCrossItems([{ clue: '', answer: '' }])
   }
 
   function handleCreate() {
     if (!form.title.trim()) return
     setCreating(true)
     setTimeout(() => {
-      const builtQuestions = questions.map((q, i) => ({
-        id: `q${i}`, type: 'quiz' as const, question: q.question,
-        answer: q.options[q.correctIndex] || '', options: q.options,
-        correctIndex: q.correctIndex, explanation: q.explanation,
-      }))
+      let builtQuestions: any[] = []
+      switch (form.type) {
+        case 'quiz':
+          builtQuestions = quizItems.map((q, i) => ({
+            id: `q${i}`, type: 'quiz', question: q.question,
+            answer: q.options[q.correctIndex] || '', options: q.options,
+            correctIndex: q.correctIndex, explanation: q.explanation,
+          })); break
+        case 'flashcard-match':
+          builtQuestions = flashItems.map((f, i) => ({
+            id: `f${i}`, type: 'match', question: f.term, answer: f.definition, explanation: '',
+          })); break
+        case 'drag-drop':
+          builtQuestions = dragItems.map((d, i) => ({
+            id: `d${i}`, type: 'match', question: d.item, answer: d.category,
+            options: dragCats, explanation: '',
+          })); break
+        case 'memory':
+          builtQuestions = memItems.map((m, i) => ({
+            id: `m${i}`, type: 'match', question: m.front, answer: m.back, explanation: '',
+          })); break
+        case 'fill-blank':
+          builtQuestions = fillItems.map((f, i) => ({
+            id: `fb${i}`, type: 'fill-blank', question: f.sentence, answer: f.answer,
+            options: f.distractors.split(',').map(s => s.trim()).filter(Boolean),
+            explanation: f.explanation,
+          })); break
+        case 'crossword':
+          builtQuestions = crossItems.map((c, i) => ({
+            id: `cw${i}`, type: 'quiz', question: c.clue, answer: c.answer, explanation: '',
+          })); break
+      }
       if (editingGame) {
-        // update existing
         setMyGames(prev => prev.map(g => g.id === editingGame.id
-          ? { ...g, ...form, questions: builtQuestions }
-          : g
+          ? { ...g, ...form, questions: builtQuestions } : g
         ))
         setEditingGame(null)
       } else {
@@ -92,12 +147,27 @@ export default function TeacherGameStudioPage() {
       grade: game.grade, branch: game.branch, topic: game.topic,
       estimatedMinutes: game.estimatedMinutes,
     })
-    setQuestions(game.questions.map(q => ({
-      question: q.question,
-      options: (q as any).options || [q.answer, '', '', ''],
-      correctIndex: (q as any).correctIndex ?? 0,
-      explanation: q.explanation,
-    })))
+    // Restore items by type
+    if (game.type === 'quiz') {
+      setQuizItems(game.questions.map(q => ({
+        question: q.question,
+        options: (q as any).options || [q.answer, '', '', ''],
+        correctIndex: (q as any).correctIndex ?? 0,
+        explanation: q.explanation,
+      })))
+    } else if (game.type === 'flashcard-match' || game.type === 'memory') {
+      const setter = game.type === 'flashcard-match' ? setFlashItems : setMemItems
+      const key1   = game.type === 'flashcard-match' ? 'term' : 'front'
+      const key2   = game.type === 'flashcard-match' ? 'definition' : 'back'
+      setter(game.questions.map(q => ({ [key1]: q.question, [key2]: q.answer } as any)))
+    } else if (game.type === 'fill-blank') {
+      setFillItems(game.questions.map(q => ({
+        sentence: q.question, answer: q.answer,
+        distractors: (q.options || []).join(', '), explanation: q.explanation,
+      })))
+    } else if (game.type === 'crossword') {
+      setCrossItems(game.questions.map(q => ({ clue: q.question, answer: q.answer })))
+    }
     setView('create')
   }
 
@@ -112,7 +182,7 @@ export default function TeacherGameStudioPage() {
           <h1 className="page-title">{editingGame ? 'Chỉnh sửa Game' : 'Tạo Game mới'}</h1>
           <p className="page-subtitle">Thiết kế trò chơi học tập cho học sinh của bạn</p>
         </div>
-        <button onClick={() => { setView('list'); setEditingGame(null) }} className="btn-secondary">← Quay lại</button>
+        <button onClick={() => { setView('list'); setEditingGame(null); resetItems() }} className="btn-secondary">← Quay lại</button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -161,7 +231,7 @@ export default function TeacherGameStudioPage() {
             <h3 className="font-semibold text-slate-800 mb-3 text-sm">🎮 Loại game</h3>
             <div className="space-y-2">
               {GAME_TYPES.map(gt => (
-                <button key={gt.type} onClick={() => setForm(p => ({ ...p, type: gt.type }))}
+                <button key={gt.type} onClick={() => setForm(p => ({ ...p, type: gt.type as GameType }))}
                   className={cn('w-full flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all',
                     form.type === gt.type
                       ? 'bg-blue-50 border-blue-300'
@@ -179,46 +249,232 @@ export default function TeacherGameStudioPage() {
           </div>
         </div>
 
-        {/* Questions */}
+        {/* Items editor — adapts to game type */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-slate-800 text-sm">{questions.length} câu hỏi</h3>
-            <button onClick={addQuestion} className="btn-secondary flex items-center gap-1.5 text-xs">
-              <Plus size={12} /> Thêm câu
+            <h3 className="font-semibold text-slate-800 text-sm">{currentCount()} {ITEM_LABEL[form.type]}</h3>
+            <button onClick={addItem} className="btn-secondary flex items-center gap-1.5 text-xs">
+              <Plus size={12} /> Thêm {ITEM_LABEL[form.type]}
             </button>
           </div>
 
-          {questions.map((q, qIdx) => (
-            <div key={qIdx} className="card p-4">
-              <p className="text-xs font-semibold text-slate-500 mb-2">Câu {qIdx + 1}</p>
+          {/* ── Quiz ── */}
+          {form.type === 'quiz' && quizItems.map((q, qi) => (
+            <div key={qi} className="card p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-semibold text-slate-500">Câu {qi + 1}</p>
+                {quizItems.length > 1 && (
+                  <button onClick={() => setQuizItems(p => p.filter((_, i) => i !== qi))}
+                    className="text-slate-300 hover:text-red-400"><Trash2 size={12} /></button>
+                )}
+              </div>
               <textarea value={q.question}
-                onChange={e => updateQuestion(qIdx, 'question', e.target.value)}
-                placeholder="Nội dung câu hỏi..."
-                className="input resize-none mb-3" rows={2}
-              />
+                onChange={e => setQuizItems(p => p.map((x, i) => i === qi ? { ...x, question: e.target.value } : x))}
+                placeholder="Nội dung câu hỏi..." className="input resize-none mb-3" rows={2} />
               <div className="grid grid-cols-2 gap-2 mb-3">
-                {q.options.map((opt, optIdx) => (
-                  <div key={optIdx} className="relative">
+                {q.options.map((opt, oi) => (
+                  <div key={oi} className="relative">
                     <input value={opt}
-                      onChange={e => updateOption(qIdx, optIdx, e.target.value)}
-                      placeholder={`Lựa chọn ${String.fromCharCode(65 + optIdx)}`}
-                      className={cn('input pr-8', q.correctIndex === optIdx && 'border-emerald-400 bg-emerald-50')}
+                      onChange={e => setQuizItems(p => p.map((x, i) => {
+                        if (i !== qi) return x
+                        const opts = [...x.options]; opts[oi] = e.target.value; return { ...x, options: opts }
+                      }))}
+                      placeholder={`Lựa chọn ${String.fromCharCode(65 + oi)}`}
+                      className={cn('input pr-8', q.correctIndex === oi && 'border-emerald-400 bg-emerald-50')}
                     />
                     <button
-                      onClick={() => updateQuestion(qIdx, 'correctIndex', optIdx)}
-                      className={cn('absolute right-2 top-1/2 -translate-y-1/2 text-xs w-5 h-5 rounded-full flex items-center justify-center',
-                        q.correctIndex === optIdx ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400 hover:bg-slate-300'
+                      onClick={() => setQuizItems(p => p.map((x, i) => i === qi ? { ...x, correctIndex: oi } : x))}
+                      className={cn('absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center text-xs',
+                        q.correctIndex === oi ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400 hover:bg-slate-300'
                       )}
-                      title="Đánh dấu đáp án đúng"
-                    >✓</button>
+                      title="Đánh dấu đáp án đúng">✓</button>
                   </div>
                 ))}
               </div>
               <input value={q.explanation}
-                onChange={e => updateQuestion(qIdx, 'explanation', e.target.value)}
-                placeholder="Giải thích đáp án..."
-                className="input text-xs"
-              />
+                onChange={e => setQuizItems(p => p.map((x, i) => i === qi ? { ...x, explanation: e.target.value } : x))}
+                placeholder="Giải thích đáp án..." className="input text-xs" />
+            </div>
+          ))}
+
+          {/* ── Flashcard Match ── */}
+          {form.type === 'flashcard-match' && flashItems.map((f, fi) => (
+            <div key={fi} className="card p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-semibold text-slate-500">🃏 Thẻ {fi + 1}</p>
+                {flashItems.length > 1 && (
+                  <button onClick={() => setFlashItems(p => p.filter((_, i) => i !== fi))}
+                    className="text-slate-300 hover:text-red-400"><Trash2 size={12} /></button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-slate-500 mb-1 block font-medium">Mặt trước – Thuật ngữ</label>
+                  <textarea value={f.term}
+                    onChange={e => setFlashItems(p => p.map((x, i) => i === fi ? { ...x, term: e.target.value } : x))}
+                    placeholder="Vd: Tế bào nhân thực" className="input resize-none" rows={3} />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 mb-1 block font-medium">Mặt sau – Định nghĩa</label>
+                  <textarea value={f.definition}
+                    onChange={e => setFlashItems(p => p.map((x, i) => i === fi ? { ...x, definition: e.target.value } : x))}
+                    placeholder="Vd: Tế bào có nhân hoàn chỉnh, được bao bọc bởi màng nhân..." className="input resize-none" rows={3} />
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* ── Drag & Drop ── */}
+          {form.type === 'drag-drop' && (
+            <>
+              <div className="card p-3 bg-slate-50 border border-dashed border-slate-200">
+                <p className="text-xs font-semibold text-slate-600 mb-2">📂 Danh mục phân loại</p>
+                <div className="flex flex-wrap gap-2">
+                  {dragCats.map((cat, ci) => (
+                    <div key={ci} className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2 py-1">
+                      <input value={cat}
+                        onChange={e => setDragCats(p => p.map((c, i) => i === ci ? e.target.value : c))}
+                        className="text-xs border-0 outline-none bg-transparent w-20" />
+                      {dragCats.length > 2 && (
+                        <button onClick={() => setDragCats(p => p.filter((_, i) => i !== ci))}
+                          className="text-slate-300 hover:text-red-400"><X size={10} /></button>
+                      )}
+                    </div>
+                  ))}
+                  <button onClick={() => setDragCats(p => [...p, `Nhóm ${p.length + 1}`])}
+                    className="text-xs text-blue-500 border border-dashed border-blue-200 px-2 py-1 rounded-lg hover:bg-blue-50">
+                    + Thêm nhóm
+                  </button>
+                </div>
+              </div>
+              {dragItems.map((d, di) => (
+                <div key={di} className="card p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-semibold text-slate-500">Mục {di + 1}</p>
+                    {dragItems.length > 1 && (
+                      <button onClick={() => setDragItems(p => p.filter((_, i) => i !== di))}
+                        className="text-slate-300 hover:text-red-400"><Trash2 size={12} /></button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-slate-500 mb-1 block font-medium">Tên mục</label>
+                      <input value={d.item}
+                        onChange={e => setDragItems(p => p.map((x, i) => i === di ? { ...x, item: e.target.value } : x))}
+                        placeholder="Vd: Lá cây" className="input" />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-500 mb-1 block font-medium">Thuộc nhóm</label>
+                      <select value={d.category}
+                        onChange={e => setDragItems(p => p.map((x, i) => i === di ? { ...x, category: e.target.value } : x))}
+                        className="input">
+                        {dragCats.map((cat, ci) => <option key={ci} value={cat}>{cat}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          {/* ── Memory Cards ── */}
+          {form.type === 'memory' && memItems.map((m, mi) => (
+            <div key={mi} className="card p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-semibold text-slate-500">🎴 Cặp {mi + 1}</p>
+                {memItems.length > 1 && (
+                  <button onClick={() => setMemItems(p => p.filter((_, i) => i !== mi))}
+                    className="text-slate-300 hover:text-red-400"><Trash2 size={12} /></button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-slate-500 mb-1 block font-medium">Bài A</label>
+                  <input value={m.front}
+                    onChange={e => setMemItems(p => p.map((x, i) => i === mi ? { ...x, front: e.target.value } : x))}
+                    placeholder="Vd: Quang hợp" className="input" />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 mb-1 block font-medium">Bài B (ghép cặp)</label>
+                  <input value={m.back}
+                    onChange={e => setMemItems(p => p.map((x, i) => i === mi ? { ...x, back: e.target.value } : x))}
+                    placeholder="Vd: 6CO₂ + 6H₂O → Glucôzơ + O₂" className="input" />
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* ── Điền chỗ trống ── */}
+          {form.type === 'fill-blank' && fillItems.map((f, fi) => (
+            <div key={fi} className="card p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-semibold text-slate-500">Câu {fi + 1}</p>
+                {fillItems.length > 1 && (
+                  <button onClick={() => setFillItems(p => p.filter((_, i) => i !== fi))}
+                    className="text-slate-300 hover:text-red-400"><Trash2 size={12} /></button>
+                )}
+              </div>
+              <div className="space-y-2">
+                <div>
+                  <label className="text-xs text-slate-500 mb-1 block font-medium">
+                    Câu có chỗ trống <span className="text-blue-500 font-normal">(dùng ___ để đánh dấu vị trí)</span>
+                  </label>
+                  <input value={f.sentence}
+                    onChange={e => setFillItems(p => p.map((x, i) => i === fi ? { ...x, sentence: e.target.value } : x))}
+                    placeholder="Vd: Cường độ dòng điện I = U / ___" className="input" />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-xs text-slate-500 mb-1 block font-medium">Đáp án đúng</label>
+                    <input value={f.answer}
+                      onChange={e => setFillItems(p => p.map((x, i) => i === fi ? { ...x, answer: e.target.value } : x))}
+                      placeholder="Vd: R" className="input" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-500 mb-1 block font-medium">Phương án nhiễu (cách nhau bởi dấu ,)</label>
+                    <input value={f.distractors}
+                      onChange={e => setFillItems(p => p.map((x, i) => i === fi ? { ...x, distractors: e.target.value } : x))}
+                      placeholder="Vd: U, I, P" className="input" />
+                  </div>
+                </div>
+                <input value={f.explanation}
+                  onChange={e => setFillItems(p => p.map((x, i) => i === fi ? { ...x, explanation: e.target.value } : x))}
+                  placeholder="Giải thích đáp án..." className="input text-xs" />
+              </div>
+            </div>
+          ))}
+
+          {/* ── Ô chữ ── */}
+          {form.type === 'crossword' && crossItems.map((c, ci) => (
+            <div key={ci} className="card p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-semibold text-slate-500">🔤 Từ {ci + 1} — {c.answer.length > 0 ? `${c.answer.length} ký tự` : 'chưa nhập'}</p>
+                {crossItems.length > 1 && (
+                  <button onClick={() => setCrossItems(p => p.filter((_, i) => i !== ci))}
+                    className="text-slate-300 hover:text-red-400"><Trash2 size={12} /></button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-slate-500 mb-1 block font-medium">Gợi ý / Định nghĩa</label>
+                  <textarea value={c.clue}
+                    onChange={e => setCrossItems(p => p.map((x, i) => i === ci ? { ...x, clue: e.target.value } : x))}
+                    placeholder="Vd: Đơn vị đo cường độ dòng điện" className="input resize-none" rows={2} />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 mb-1 block font-medium">Đáp án (không dấu, in hoa)</label>
+                  <input value={c.answer}
+                    onChange={e => setCrossItems(p => p.map((x, i) => i === ci ? { ...x, answer: e.target.value.toUpperCase().replace(/[^A-Z]/g, '') } : x))}
+                    placeholder="Vd: AMPE" className="input font-mono tracking-widest" />
+                  {c.answer && (
+                    <div className="flex gap-1 mt-2 flex-wrap">
+                      {c.answer.split('').map((ch, idx) => (
+                        <span key={idx} className="w-6 h-6 border border-slate-300 rounded flex items-center justify-center text-xs font-bold text-slate-600 bg-slate-50">{ch}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           ))}
 
